@@ -559,13 +559,20 @@ var SidebarTabLink = React.createClass( {
 var TimeTrackerApp = React.createClass( {
 	getInitialState: function() {
 
-		return {
-			"activeTab": 0,
-			"tabs": [
-				{ "id": 0, "link": "#", "text": "New Task" },
-				{ "id": 1, "link": "#", "text": "Current Tasks", "total": 2 },
-			],
-			"tasks": [
+		var tasks = localStorage[ "tasks" ];
+
+		if ( tasks ) {
+
+			tasks = JSON.parse( tasks );
+
+			console.log(
+				"Restoring tasks:",
+				tasks
+			);
+
+		} else {
+
+			tasks = [
 				{
 					"id": 0,
 					"name": "First task",
@@ -592,7 +599,17 @@ var TimeTrackerApp = React.createClass( {
 					},
 					"total": { "h": 0, "m": 0, "s": 0 }
 				}
-			]
+			];
+
+		}
+
+		return {
+			"activeTab": 1,
+			"tabs": [
+				{ "id": 0, "link": "#", "text": "New Task" },
+				{ "id": 1, "link": "#", "text": "Current Tasks", "total": 2 },
+			],
+			"tasks": tasks
 		};
 
 	},
@@ -705,51 +722,65 @@ var TimeTrackerApp = React.createClass( {
 		this.setState( { "tasks": currentTasks } );
 
 	},
-	handleToggleTimer: function( taskInfo ) {
+	updateTaskInfo: function( taskInfo ) {
 
-		var self = this;
 		var currentTasks = this.state.tasks.slice();
 
-		function updateTask( task ) {
+		currentTasks.forEach( function( t ) {
+			if ( t.id == taskInfo.id ) {
+				t = taskInfo;
+			}
+		} );
 
-			currentTasks.forEach( function( t ) {
-				if ( t.id == task.id ) {
-					t = task;
-				}
-			} );
+		this.setState( { "tasks": currentTasks } );
 
-			self.setState( { "tasks": currentTasks } );
+	},
+	setTaskTimer: function( task, status ) {
+
+		if ( status === "onPause" ) {
+
+			task.state = "onPause";
+
+			window.clearInterval( task.timer );
+			task.timer = null;
+
+		} else if ( status === "onPlay" ) {
+
+			task.state = "onPlay";
+
+			task.timer = setInterval( function() {
+
+				var sec = task.total.s + 1 >= 60 ? 0 : task.total.s + 1;
+				var addMin = task.total.s + 1 >= 60;
+				var addHr = addMin && task.total.m + 1 >= 60;
+
+				task.total.s = sec;
+				task.total.m = addMin ?
+					( addHr ? 0 : task.total.m + 1 ) : task.total.m;
+				task.total.h = addHr ? task.total.h + 1 : task.total.h;
+
+				this.updateTaskInfo( task );
+
+			}.bind( this ), 1000 );
+
 		}
+
+		return task;
+
+	},
+	handleToggleTimer: function( taskInfo ) {
 
 		if ( taskInfo.timer ) {
 
-			window.clearInterval( taskInfo.timer );
-			taskInfo.timer = null;
-
-			taskInfo.state = "onPause";
+			taskInfo = this.setTaskTimer( taskInfo, "onPause" );
 
 		} else {
 
-			taskInfo.state = "onPlay";
-
-			taskInfo.timer = setInterval( function() {
-
-				var sec = taskInfo.total.s + 1 >= 60 ? 0 : taskInfo.total.s + 1;
-				var addMin = taskInfo.total.s + 1 >= 60;
-				var addHr = addMin && taskInfo.total.m + 1 >= 60;
-
-				taskInfo.total.s = sec;
-				taskInfo.total.m = addMin ?
-					( addHr ? 0 : taskInfo.total.m + 1 ) : taskInfo.total.m;
-				taskInfo.total.h = addHr ? taskInfo.total.h + 1 : taskInfo.total.h;
-
-				updateTask( taskInfo );
-
-			}, 1000 );
+			taskInfo = this.setTaskTimer( taskInfo, "onPlay" );
 
 		}
 
-		updateTask( taskInfo );
+		this.updateTaskInfo( taskInfo );
 
 	},
 	render: function() {
@@ -798,6 +829,36 @@ var TimeTrackerApp = React.createClass( {
 
 		    </div>
 		);
+
+	},
+	componentDidMount: function() {
+
+		var self = this;
+
+		// Play tasks on load
+		var tasks = self.state.tasks.slice();
+
+		for ( var i = tasks.length; i--; ) {
+
+			var task = tasks[ i ];
+
+			if ( task.state === "onPlay" ) {
+
+				console.log( "Playing task:", task.name );
+
+				this.setTaskTimer( task, "onPlay" );
+				this.updateTaskInfo( task );
+
+			}
+
+		}
+
+		// Save tasks on tab close / reload
+		window.onbeforeunload = function( e ) {
+
+			localStorage[ "tasks" ] = JSON.stringify( tasks	);
+
+		}
 
 	}
 } );
