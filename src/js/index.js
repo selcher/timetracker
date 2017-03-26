@@ -1,10 +1,12 @@
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 // Task list container
-var TaskListContainer = React.createClass( {
-	render: function() {
+class TaskListContainer extends React.Component {
+	render() {
 
-		var props = this.props;
+		const props = this.props;
 
 		return (
 			<div id="current-task-content"
@@ -22,77 +24,68 @@ var TaskListContainer = React.createClass( {
 		);
 
 	}
-} );
+}
 
 // Current task tab content
-var TaskList = React.createClass( {
-	handleTaskNameStartEdit: function( taskInfo ) {
-
+class TaskList extends React.Component {
+	handleTaskNameStartEdit( taskInfo ) {
 		this.props.startTaskEdit( taskInfo, "name" );
+	}
 
-	},
-	handleTaskNameChange: function( taskInfo, name ) {
-
+	handleTaskNameChange( taskInfo, name ) {
 		this.props.changeTaskEdit( taskInfo, "name", name );
+	}
 
-	},
-	handleTaskNameSaveEdit: function( taskInfo ) {
-
+	handleTaskNameSaveEdit( taskInfo ) {
 		this.props.saveTaskEdit( taskInfo, "name" );
+	}
 
-	},
-	handleTaskNameCancelEdit: function( taskInfo ) {
-
+	handleTaskNameCancelEdit( taskInfo ) {
 		this.props.cancelTaskEdit( taskInfo, "name" );
+	}
 
-	},
-	handleTaskDescriptionStartEdit: function( taskInfo ) {
-
+	handleTaskDescriptionStartEdit( taskInfo ) {
 		this.props.startTaskEdit( taskInfo, "description" );
+	}
 
-	},
-	handleTaskDescriptionChange: function( taskInfo, description ) {
-
+	handleTaskDescriptionChange( taskInfo, description ) {
 		this.props.changeTaskEdit( taskInfo, "description", description );
+	}
 
-	},
-	handleTaskDescriptionSaveEdit: function( taskInfo ) {
-
+	handleTaskDescriptionSaveEdit( taskInfo ) {
 		this.props.saveTaskEdit( taskInfo, "description" );
+	}
 
-	},
-	handleTaskDescriptionCancelEdit: function( taskInfo ) {
-
+	handleTaskDescriptionCancelEdit( taskInfo ) {
 		this.props.cancelTaskEdit( taskInfo, "description" );
+	}
 
-	},
-	toggleTimer: function( taskInfo ) {
-
+	toggleTimer( taskInfo ) {
 		this.props.toggleTimer( taskInfo );
+	}
 
-	},
-	handleRemoveTask: function( taskInfo ) {
-
+	handleRemoveTask( taskInfo ) {
 		this.props.removeTask( taskInfo );
+	}
 
-	},
-	render: function() {
+	render() {
 
-		var tasks = this.props.tasks.map(
+		const tasks = this.props.tasks.map(
 			function( taskInfo ) {
 
 				return (
-					<Task info={ taskInfo }
-						handleRemoveTask={ this.handleRemoveTask }
-						handleTaskNameStartEdit={ this.handleTaskNameStartEdit }
-						handleTaskNameChange={ this.handleTaskNameChange }
-						handleTaskNameSaveEdit={ this.handleTaskNameSaveEdit }
-						handleTaskNameCancelEdit={ this.handleTaskNameCancelEdit }
-						handleTaskDescriptionStartEdit={ this.handleTaskDescriptionStartEdit }
-						handleTaskDescriptionChange={ this.handleTaskDescriptionChange }
-						handleTaskDescriptionSaveEdit={ this.handleTaskDescriptionSaveEdit }
-						handleTaskDescriptionCancelEdit={ this.handleTaskDescriptionCancelEdit }
-						toggleTimer={ this.toggleTimer } />
+					<Task key={ taskInfo.id }
+						info={ taskInfo }
+						handleRemoveTask={ this.handleRemoveTask.bind(this) }
+						handleTaskNameStartEdit={ this.handleTaskNameStartEdit.bind(this) }
+						handleTaskNameChange={ this.handleTaskNameChange.bind(this) }
+						handleTaskNameSaveEdit={ this.handleTaskNameSaveEdit.bind(this) }
+						handleTaskNameCancelEdit={ this.handleTaskNameCancelEdit.bind(this) }
+						handleTaskDescriptionStartEdit={ this.handleTaskDescriptionStartEdit.bind(this) }
+						handleTaskDescriptionChange={ this.handleTaskDescriptionChange.bind(this) }
+						handleTaskDescriptionSaveEdit={ this.handleTaskDescriptionSaveEdit.bind(this) }
+						handleTaskDescriptionCancelEdit={ this.handleTaskDescriptionCancelEdit.bind(this) }
+						toggleTimer={ this.toggleTimer.bind(this) } />
 				);
 
 			}.bind( this )
@@ -120,84 +113,74 @@ var TaskList = React.createClass( {
 		);
 
 	}
-} );
+}
 
 // Task
-var Task = React.createClass ( {
-	handleRemoveTask: function() {
-
+class Task extends React.Component {
+	handleRemoveTask() {
 		this.props.handleRemoveTask( this.props.info );
+	}
 
-	},
-	handleTaskNameStartEdit: function() {
-
+	handleTaskNameStartEdit() {
 		this.props.handleTaskNameStartEdit( this.props.info );
+	}
 
-	},
-	handleTaskNameChange: function( e ) {
-
+	handleTaskNameChange( e ) {
 		var newTaskName = e.target.value;
 		this.props.handleTaskNameChange( this.props.info, newTaskName );
+	}
 
-	},
-	handleTaskNameSaveEdit: function() {
-
+	handleTaskNameSaveEdit() {
 		this.props.handleTaskNameSaveEdit( this.props.info );
+	}
 
-	},
-	handleTaskNameCancelEdit: function() {
-
+	handleTaskNameCancelEdit() {
 		this.props.handleTaskNameCancelEdit( this.props.info );
+	}
 
-	},
-	handleTaskDescriptionStartEdit: function() {
-
+	handleTaskDescriptionStartEdit() {
 		this.props.handleTaskDescriptionStartEdit( this.props.info );
+	}
 
-	},
-	handleTaskDescriptionChange: function( e ) {
-
+	handleTaskDescriptionChange( e ) {
 		var newTaskDesc = e.target.value;
 		this.props.handleTaskDescriptionChange( this.props.info, newTaskDesc );
+	}
 
-	},
-	handleTaskDescriptionSaveEdit: function() {
-
+	handleTaskDescriptionSaveEdit() {
 		this.props.handleTaskDescriptionSaveEdit( this.props.info );
+	}
 
-	},
-	handleTaskDescriptionCancelEdit: function() {
-
+	handleTaskDescriptionCancelEdit() {
 		this.props.handleTaskDescriptionCancelEdit( this.props.info );
+	}
 
-	},
-	toggleTimer: function() {
-
+	toggleTimer() {
 		this.props.toggleTimer( this.props.info );
+	}
 
-	},
-	render: function() {
+	render() {
 
-		var taskInfo = this.props.info;
+		const taskInfo = this.props.info;
 
-		var editingName = taskInfo.editing.name;
-		var editName = editingName ? "" : "noBackground noBorder";
-		var editNameOkButton = editingName ? "" : "hide";
-		var editNameCancelButton = editingName ? "" : "hide";
+		const editingName = taskInfo.editing.name;
+		const editName = editingName ? "" : "noBackground noBorder";
+		const editNameOkButton = editingName ? "" : "hide";
+		const editNameCancelButton = editingName ? "" : "hide";
 
-		var editingDesc = taskInfo.editing.description;
-		var editDescription = editingDesc ? "" : "noBackground noBorder";
-		var editDescriptionOkButton = editingDesc ? "" : "hide";
-		var editDescriptionCancelButton = editingDesc ? "" : "hide";
+		const editingDesc = taskInfo.editing.description;
+		const editDescription = editingDesc ? "" : "noBackground noBorder";
+		const editDescriptionOkButton = editingDesc ? "" : "hide";
+		const editDescriptionCancelButton = editingDesc ? "" : "hide";
 
-		var total = taskInfo.total;
-		var totalTime = total.h + "h " + total.m + "m " + total.s + "s";
+		const total = taskInfo.total;
+		const totalTime = total.h + "h " + total.m + "m " + total.s + "s";
 
-		var onPause = taskInfo.state == "onPause";
-		var playIcon = onPause ? "fa fa-play" : "fa fa-pause";
-		var onPlayIconClick = this.toggleTimer;
-		var showRemoveIcon = onPause ? "" : "hide";
-		var showRunningIcon = onPause ? "hide" : "";
+		const onPause = taskInfo.state == "onPause";
+		const playIcon = onPause ? "fa fa-play" : "fa fa-pause";
+		const onPlayIconClick = this.toggleTimer;
+		const showRemoveIcon = onPause ? "" : "hide";
+		const showRunningIcon = onPause ? "hide" : "";
 
 		return (
 
@@ -206,7 +189,7 @@ var Task = React.createClass ( {
 				<td>
 					<i className={ "cursor taskRemove fa fa-times " +
 						showRemoveIcon }
-						onClick={ this.handleRemoveTask }></i>
+						onClick={ this.handleRemoveTask.bind(this) }></i>
 					<i className={ "taskRunning fa fa-spinner fa-spin " +
 						showRunningIcon }></i>
 				</td>
@@ -215,16 +198,16 @@ var Task = React.createClass ( {
 					<input type="text" name="name" placeholder="Name"
 						className={ editName }
 						value={ taskInfo.name }
-						onClick={ this.handleTaskNameStartEdit }
-						onChange={ this.handleTaskNameChange } />
+						onClick={ this.handleTaskNameStartEdit.bind(this) }
+						onChange={ this.handleTaskNameChange.bind(this) } />
 					<div className={ "clearFloat" }></div>
 					<div className={ "icon iconButton iconCheck floatLeft " +
 						editNameOkButton }
-						onClick={ this.handleTaskNameSaveEdit } >
+						onClick={ this.handleTaskNameSaveEdit.bind(this) } >
 					</div>
 					<div className={ "icon iconButton iconClose floatLeft " +
 						editNameOkButton}
-						onClick={ this.handleTaskNameCancelEdit } >
+						onClick={ this.handleTaskNameCancelEdit.bind(this) } >
 					</div>
 				</td>
 
@@ -232,17 +215,17 @@ var Task = React.createClass ( {
 					<textarea name="description" placeholder="Description"
 						className={ editDescription }
 						value={ taskInfo.description }
-						onClick={ this.handleTaskDescriptionStartEdit }
-						onChange={ this.handleTaskDescriptionChange } >
+						onClick={ this.handleTaskDescriptionStartEdit.bind(this) }
+						onChange={ this.handleTaskDescriptionChange.bind(this) } >
 					</textarea>
 					<div className={ "clearFloat" }></div>
 					<div className={ "icon iconButton iconCheck floatLeft " +
 						editDescriptionOkButton }
-						onClick={ this.handleTaskDescriptionSaveEdit } >
+						onClick={ this.handleTaskDescriptionSaveEdit.bind(this) } >
 					</div>
 					<div className={ "icon iconButton iconClose floatLeft " +
 						editDescriptionOkButton}
-						onClick={ this.handleTaskDescriptionCancelEdit } >
+						onClick={ this.handleTaskDescriptionCancelEdit.bind(this) } >
 					</div>
 				</td>
 
@@ -252,7 +235,7 @@ var Task = React.createClass ( {
 
 				<td>
 					<i className={ "cursor taskPlay " + playIcon }
-						onClick={ onPlayIconClick }></i>
+						onClick={ onPlayIconClick.bind(this) }></i>
 				</td>
 
 			</tr>
@@ -260,13 +243,13 @@ var Task = React.createClass ( {
 		);
 
 	}
-} );
+}
 
 // New task form
-var NewTaskForm = React.createClass( {
-	render: function() {
+class NewTaskForm extends React.Component {
+	render() {
 
-		var props = this.props;
+		const props = this.props;
 
 		return (
 			<div id="new-task-form"
@@ -278,13 +261,14 @@ var NewTaskForm = React.createClass( {
 		);
 
 	}
-} );
+}
 
 // New task tab content
-var NewTask = React.createClass( {
-	getInitialState: function() {
+class NewTask extends React.Component {
+	constructor(props) {
+		super(props);
 
-		return {
+		this.state = {
 			"taskName": "",
 			"taskDescription": "",
 			"message": "",
@@ -292,29 +276,32 @@ var NewTask = React.createClass( {
 			"timer": null
 		};
 
-	},
-	handleTaskNameChange: function( event ) {
+	}
+
+	handleTaskNameChange( event ) {
 
 		this.setState( {
 			"taskName": event.target.value
 		} );
 
-	},
-	handleTaskDescriptionChange: function( event ) {
+	}
+
+	handleTaskDescriptionChange( event ) {
 
 		this.setState( {
 			"taskDescription": event.target.value
 		} );
 
-	},
-	onAddNewTask: function( ) {
+	}
 
-		var state = this.state;
+	onAddNewTask( ) {
 
-		var taskName = state.taskName;
-		var taskDescription = state.taskDescription;
-		var messge = "";
-		var status = "";
+		const state = this.state;
+
+		const taskName = state.taskName;
+		const taskDescription = state.taskDescription;
+		let message = "";
+		let status = "";
 
 		if ( taskName && taskDescription ) {
 
@@ -338,7 +325,7 @@ var NewTask = React.createClass( {
 
 		// TOOO: fix bug when switching tabs while
 		// add task success message has not timed out
-		var timer = setTimeout( function() {
+		const timer = setTimeout( function() {
 
 			this.setState( {
 				"message" : "",
@@ -354,15 +341,16 @@ var NewTask = React.createClass( {
 			"timer": timer
 		} );
 
-	},
-	render: function() {
+	}
 
-		var taskName = this.state.taskName;
-		var taskDescription = this.state.taskDescription;
-		var status = this.state.status;
-		var messageClass = status == "" ? "" :
+	render() {
+
+		const taskName = this.state.taskName;
+		const taskDescription = this.state.taskDescription;
+		const status = this.state.status;
+		const messageClass = status == "" ? "" :
 			( status == "success" ? "successMessage" : "errorMessage" );
-		var messageIcon = status == "success" ?
+		const messageIcon = status == "success" ?
 			( <i className={ "fa fa-check-circle" }></i> ) :
 			( <div></div> );
 
@@ -379,14 +367,14 @@ var NewTask = React.createClass( {
 		        	<label>Name:</label>
 		            <input type="text" name="name" placeholder="Name"
 		            	value={ taskName }
-						onChange={ this.handleTaskNameChange } />
+						onChange={ this.handleTaskNameChange.bind(this) } />
 
 		            <br/>
 
 		            <label>Description:</label>
 		            <textarea name="message" placeholder="Description of task..."
 		            	value={ taskDescription }
-						onChange={ this.handleTaskDescriptionChange } >
+						onChange={ this.handleTaskDescriptionChange.bind(this) } >
 		            </textarea>
 
 		            <br/>
@@ -395,7 +383,7 @@ var NewTask = React.createClass( {
 			        	<input type="button"
 			        		className="pure-button pure-button-primary"
 							value="Add"
-			        		onClick={ this.onAddNewTask } />
+			        		onClick={ this.onAddNewTask.bind(this) } />
 			        	&nbsp;
 			        	<input type="reset"
 			        		className="pure-button" value="Reset" />
@@ -404,7 +392,9 @@ var NewTask = React.createClass( {
 			        <br/>
 
 			        <ReactCSSTransitionGroup
-						transitionName="show-hide-animation">
+						transitionName="show-hide-animation"
+						transitionEnterTimeout={500}
+						transitionLeaveTimeout={500}>
 			        	<div key={ this.state.message }
 			        		className={ messageClass }>
 							{ messageIcon }
@@ -419,24 +409,24 @@ var NewTask = React.createClass( {
 
 	}
 
-} );
+}
 
 // DateInfo
-var DateInfo = React.createClass( {
-	render: function() {
+class DateInfo extends React.Component {
+	render() {
 
-		var d = new Date();
-		var days = [
+		const d = new Date();
+		const days = [
 			"Sunday", "Monday", "Tuesday", "Wednesday",
 			"Thursday", "Friday", "Saturday"
 		];
-		var dayOfWeek = days[ d.getDay() ];
-		var months = [
+		const dayOfWeek = days[ d.getDay() ];
+		const months = [
 			"January", "February", "March", "April", "May", "June",
 			"July", "August", "September", "October", "November", "December"
 		];
-		var month = months[ d.getMonth() ];
-		var today = month + " " + d.getDate() + ", " + d.getFullYear();
+		const month = months[ d.getMonth() ];
+		const today = month + " " + d.getDate() + ", " + d.getFullYear();
 
 		return (
 			<div>
@@ -447,27 +437,11 @@ var DateInfo = React.createClass( {
 		);
 
 	}
-} );
+}
 
 // Sidebar
-var Sidebar = React.createClass( {
-	getDefaultProps: function() {
-
-		return {
-			"activeTab": 0,
-			"tabs": [
-				{
-					"id": 0,
-					"link": "#",
-					"text": "tab 1"
-				}
-			],
-			"onTabClick": function( e, tab ) {}
-		};
-
-	},
-	render: function() {
-
+class Sidebar extends React.Component {
+	render() {
 		return (
 			<aside id="sidebar"
 				className="pure-u-1 pure-u-md-5-24 pure-u-lg-1-4 small-box shadow">
@@ -480,11 +454,23 @@ var Sidebar = React.createClass( {
 		);
 
 	}
-} );
+}
+
+Sidebar.defaultProps = {
+	"activeTab": 0,
+	"tabs": [
+		{
+			"id": 0,
+			"link": "#",
+			"text": "tab 1"
+		}
+	],
+	"onTabClick": function( e, tab ) {}
+};
 
 // Sidebar tabs
-var SidebarTabs = React.createClass( {
-	render: function() {
+class SidebarTabs extends React.Component {
+	render() {
 
 		return (
 			<nav id="sidebar-tabs"
@@ -500,21 +486,22 @@ var SidebarTabs = React.createClass( {
 
 	}
 
-} );
+}
 
-var SidebarTabList = React.createClass( {
-	render: function() {
+class SidebarTabList extends React.Component {
+	render() {
 
-		var activeTab = this.props.activeTab;
-		var onTabClick = this.props.onTabClick;
-		var tabs = this.props.tabs.map(
+		const activeTab = this.props.activeTab;
+		const onTabClick = this.props.onTabClick;
+		const tabs = this.props.tabs.map(
 				function( tab ) {
 
-					var tabClass = tab.id == activeTab ?
+					const tabClass = tab.id == activeTab ?
 						"pure-menu-selected" : "";
 
 					return (
-						<li className={ tabClass }>
+						<li className={ tabClass }
+							key={ tab.id }>
 							<SidebarTabLink tab={ tab }
 								onTabClick={ onTabClick } />
 						</li>
@@ -530,36 +517,36 @@ var SidebarTabList = React.createClass( {
 		);
 
 	}
-} );
+}
 
-var SidebarTabLink = React.createClass( {
-	onTabClick: function( e ) {
-
+class SidebarTabLink extends React.Component {
+	onTabClick( e ) {
 		this.props.onTabClick( e, this.props.tab );
+	}
 
-	},
-	render: function() {
+	render() {
 
-		var tabData = this.props.tab;
-		var linkText = typeof tabData.total !== "undefined" ?
+		const tabData = this.props.tab;
+		const linkText = typeof tabData.total !== "undefined" ?
 			tabData.text + " (" + tabData.total + ")" : tabData.text;
 
 		return(
 			<a className="menu-item-link"
 				href={ tabData.link }
-				onClick={ this.onTabClick }>
+				onClick={ this.onTabClick.bind(this) }>
 				{ linkText }
 			</a>
 		);
 
 	}
-} );
+}
 
 // Time tracker app
-var TimeTrackerApp = React.createClass( {
-	getInitialState: function() {
+class TimeTrackerApp extends React.Component {
+	constructor(props) {
+		super(props);
 
-		var tasks = localStorage[ "tasks" ];
+		let tasks = localStorage[ "tasks" ];
 
 		if ( tasks ) {
 
@@ -603,27 +590,29 @@ var TimeTrackerApp = React.createClass( {
 
 		}
 
-		return {
+		this.state = {
 			"activeTab": 1,
 			"tabs": [
 				{ "id": 0, "link": "#", "text": "New Task" },
-				{ "id": 1, "link": "#", "text": "Current Tasks", "total": 2 },
+				{ "id": 1, "link": "#", "text": "Current Tasks", "total": tasks.length },
 			],
 			"tasks": tasks
 		};
 
-	},
-	handleTabClick: function( e, tab ) {
+	}
+
+	handleTabClick( e, tab ) {
 
 		e.preventDefault();
 
 		this.setState( { "activeTab": tab.id } );
 
-	},
-	handleAddNewTaskClick: function( name, description ) {
+	}
 
-		var currentTasks = this.state.tasks;
-		var newTask = {
+	handleAddNewTaskClick( name, description ) {
+
+		let currentTasks = this.state.tasks;
+		const newTask = {
 			"id": currentTasks.length,
 			"name": name,
 			"description": description,
@@ -641,7 +630,7 @@ var TimeTrackerApp = React.createClass( {
 		currentTasks.push( newTask );
 
 		// update total task count on sidebar
-		var tabs = this.state.tabs.slice();
+		let tabs = this.state.tabs.slice();
 
 		tabs[ 1 ].total += 1;
 
@@ -651,13 +640,14 @@ var TimeTrackerApp = React.createClass( {
 			"tasks": currentTasks
 		} );
 
-	},
-	handleRemoveTaskClick: function( taskInfo ) {
+	}
 
-		var currentTasks = this.state.tasks.slice();
-		var length = currentTasks.length;
-		var taskId = taskInfo.id;
-		var taskIndexInList = null;
+	handleRemoveTaskClick( taskInfo ) {
+
+		let currentTasks = this.state.tasks.slice();
+		const length = currentTasks.length;
+		const taskId = taskInfo.id;
+		let taskIndexInList = null;
 
 		// remove task
 		for( var i = 0; i < length; i++ ) {
@@ -671,7 +661,7 @@ var TimeTrackerApp = React.createClass( {
 		currentTasks.splice( taskIndexInList, 1 );
 
 		// update total task count on sidebar
-		var tabs = this.state.tabs.slice();
+		let tabs = this.state.tabs.slice();
 
 		tabs[ 1 ].total -= 1;
 
@@ -681,39 +671,43 @@ var TimeTrackerApp = React.createClass( {
 			"tasks": currentTasks
 		} );
 
-	},
-	handleStartTaskEdit: function( taskInfo, fieldName ) {
+	}
 
-		var currentTasks = this.state.tasks;
+	handleStartTaskEdit( taskInfo, fieldName ) {
+
+		let currentTasks = this.state.tasks;
 
 		currentTasks[ taskInfo.id ].editing[ fieldName ] = true;
 		currentTasks[ taskInfo.id ].editing[ fieldName + "Store" ] = currentTasks[ taskInfo.id ][ fieldName ];
 
 		this.setState( { "tasks": currentTasks } );
 
-	},
-	handleChangeTaskEdit: function( taskInfo, fieldName, fieldValue ) {
+	}
 
-		var currentTasks = this.state.tasks;
+	handleChangeTaskEdit( taskInfo, fieldName, fieldValue ) {
+
+		let currentTasks = this.state.tasks;
 
 		currentTasks[ taskInfo.id ][ fieldName ] = fieldValue;
 
 		this.setState( { "tasks": currentTasks } );
 
-	},
-	handleSaveTaskEdit: function( taskInfo, fieldName ) {
+	}
 
-		var currentTasks = this.state.tasks;
+	handleSaveTaskEdit( taskInfo, fieldName ) {
+
+		let currentTasks = this.state.tasks;
 
 		currentTasks[ taskInfo.id ].editing[ fieldName ] = false;
 		currentTasks[ taskInfo.id ].editing[ fieldName + "Store" ] = "";
 
 		this.setState( { "tasks": currentTasks } );
 
-	},
-	handleCancelTaskEdit: function( taskInfo, fieldName ) {
+	}
 
-		var currentTasks = this.state.tasks;
+	handleCancelTaskEdit( taskInfo, fieldName ) {
+
+		let currentTasks = this.state.tasks;
 
 		currentTasks[ taskInfo.id ][ fieldName ] = currentTasks[ taskInfo.id ].editing[ fieldName + "Store" ];
 		currentTasks[ taskInfo.id ].editing[ fieldName ] = false;
@@ -721,10 +715,11 @@ var TimeTrackerApp = React.createClass( {
 
 		this.setState( { "tasks": currentTasks } );
 
-	},
-	updateTaskInfo: function( taskInfo ) {
+	}
 
-		var currentTasks = this.state.tasks.slice();
+	updateTaskInfo( taskInfo ) {
+
+		let currentTasks = this.state.tasks.slice();
 
 		currentTasks.forEach( function( t ) {
 			if ( t.id == taskInfo.id ) {
@@ -734,8 +729,9 @@ var TimeTrackerApp = React.createClass( {
 
 		this.setState( { "tasks": currentTasks } );
 
-	},
-	setTaskTimer: function( task, status ) {
+	}
+
+	setTaskTimer( task, status ) {
 
 		if ( status === "onPause" ) {
 
@@ -767,8 +763,9 @@ var TimeTrackerApp = React.createClass( {
 
 		return task;
 
-	},
-	handleToggleTimer: function( taskInfo ) {
+	}
+
+	handleToggleTimer( taskInfo ) {
 
 		if ( taskInfo.timer ) {
 
@@ -782,46 +779,51 @@ var TimeTrackerApp = React.createClass( {
 
 		this.updateTaskInfo( taskInfo );
 
-	},
-	render: function() {
+	}
 
-		var activeTab = this.state.activeTab;
+	render() {
+
+		const activeTab = this.state.activeTab;
 
 		return (
 			<div className="pure-g">
 
 				<Sidebar activeTab={ activeTab }
 					tabs={ this.state.tabs }
-					onTabClick={ this.handleTabClick } />
+					onTabClick={ this.handleTabClick.bind(this) } />
 
 			    <aside id="task-content"
 			    	className="pure-u-1 pure-u-md-18-24 pure-u-lg-17-24 small-box shadow">
 
 			    	<ReactCSSTransitionGroup
 						transitionName="switch-tab-animation"
-						transitionLeave={ false }>
+						transitionLeave={ false }
+						transitionEnterTimeout={500}
+						transitionLeaveTimeout={500}>
 
 						<NewTaskForm
 							key={ activeTab }
 							show={ activeTab == 0 }
-							onAddNewTaskClick={ this.handleAddNewTaskClick } />
+							onAddNewTaskClick={ this.handleAddNewTaskClick.bind(this) } />
 
 					</ReactCSSTransitionGroup>
 
 			    	<ReactCSSTransitionGroup
 						transitionName="switch-tab-animation"
-						transitionLeave={ false }>
+						transitionLeave={ false }
+						transitionEnterTimeout={500}
+						transitionLeaveTimeout={500}>
 
 						<TaskListContainer
 							key={ activeTab }
 							show={ activeTab == 1 }
 							tasks={ this.state.tasks }
-							startTaskEdit={ this.handleStartTaskEdit }
-							changeTaskEdit={ this.handleChangeTaskEdit }
-							saveTaskEdit={ this.handleSaveTaskEdit }
-							cancelTaskEdit={ this.handleCancelTaskEdit }
-							toggleTimer={ this.handleToggleTimer }
-							removeTask={ this.handleRemoveTaskClick } />
+							startTaskEdit={ this.handleStartTaskEdit.bind(this) }
+							changeTaskEdit={ this.handleChangeTaskEdit.bind(this) }
+							saveTaskEdit={ this.handleSaveTaskEdit.bind(this) }
+							cancelTaskEdit={ this.handleCancelTaskEdit.bind(this) }
+							toggleTimer={ this.handleToggleTimer.bind(this) }
+							removeTask={ this.handleRemoveTaskClick.bind(this) } />
 
 			    	</ReactCSSTransitionGroup>
 
@@ -830,17 +832,18 @@ var TimeTrackerApp = React.createClass( {
 		    </div>
 		);
 
-	},
-	componentDidMount: function() {
+	}
 
-		var self = this;
+	componentDidMount() {
+
+		const self = this;
 
 		// Play tasks on load
-		var tasks = self.state.tasks.slice();
+		const tasks = self.state.tasks.slice();
 
-		for ( var i = tasks.length; i--; ) {
+		for ( let i = tasks.length; i--; ) {
 
-			var task = tasks[ i ];
+			const task = tasks[ i ];
 
 			if ( task.state === "onPlay" ) {
 
@@ -856,14 +859,14 @@ var TimeTrackerApp = React.createClass( {
 		// Save tasks on tab close / reload
 		window.onbeforeunload = function( e ) {
 
-			localStorage[ "tasks" ] = JSON.stringify( tasks	);
+			localStorage[ "tasks" ] = JSON.stringify( self.state.tasks	);
 
 		}
 
 	}
-} );
+}
 
-React.renderComponent(
+ReactDOM.render(
 	<TimeTrackerApp />,
-	document.getElementById( "app" )
+	document.getElementById('app')
 );
