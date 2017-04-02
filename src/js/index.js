@@ -2,6 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+import initOpbeat from 'opbeat-react';
+
+initOpbeat({
+    appId: '92cc2b0285',
+    organizationId: '622909d2afcb421383e9cec60bd045ae',
+    secretToken: 'aa9d4874898f7790456ea4da9d641201cd7ae661'
+});
+
 // Task list container
 class TaskListContainer extends React.Component {
 	render() {
